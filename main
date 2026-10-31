@@ -968,7 +968,30 @@ function _0xa299._0xGetHttpRequest()
     return _0xa299._0x0a65
 end
 
+-- PLAYERS.LOCALPLAYER CAN BE NIL AT THIS POINT.
+--
+-- It is nil whenever this line runs before the player object has replicated:
+-- auto-execute on join, and - the one that actually bit - the self-re-execute
+-- after a server hop, where _0x027f loadstrings this whole script again as
+-- soon as the new place loads.
+--
+-- Nothing below tolerates nil. The Anti-AFK block ~80 lines down indexes
+-- _0x396d.Idled unconditionally and is simply the first to reach it, which is
+-- what ":1054: attempt to index nil with 'Idled'" was - the error names the
+-- symptom, not the cause. The Luarmor loader used to mask this: its key
+-- handshake is a network round trip, so the player had always arrived by the
+-- time the script ran. A plain raw-URL loadstring has no such delay.
+--
+-- Bounded rather than an open GetPropertyChangedSignal("LocalPlayer"):Wait(),
+-- because hanging here is indistinguishable from the script never loading.
 _0xa299._0x396d = _0xa299._0x71bb.LocalPlayer
+if not _0xa299._0x396d then
+    local deadline = tick() + 10
+    repeat
+        task.wait(0.05)
+        _0xa299._0x396d = _0xa299._0x71bb.LocalPlayer
+    until _0xa299._0x396d or tick() > deadline
+end
 
 -- Ban/Kick Detection Webhook + Supabase Logging
 pcall(function()
